@@ -18,3 +18,13 @@ class GetAllPostsUseCase{
 
  */
 }
+
+
+
+
+/*
+
+
+user = > Presentation => Domain => Data
+
+*/

@@ -14,16 +14,22 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
 
   PostsBloc({required this.getAllPostsUseCase}) : super(PostsInitial()) {
     on<PostsEvent>((event, emit) async {
+     
       if (event is GetAllPostsEvent) {
+       
         emit(loadingPostsState());
         final failuresOrPosts = await getAllPostsUseCase();
         // tester si on reçoit le right ou le left
         emit(_mapFailureOrPostsToState(failuresOrPosts));
-      } else if (event is RefreshPostsEvent) {
+     
+      } 
+      else if (event is RefreshPostsEvent) {
+        
         emit(loadingPostsState());
         final failuresOrPosts = await getAllPostsUseCase();
         // tester si on reçoit le right ou le left
         emit(_mapFailureOrPostsToState(failuresOrPosts));
+      
       }
     });
   }

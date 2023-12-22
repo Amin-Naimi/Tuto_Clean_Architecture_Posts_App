@@ -15,7 +15,7 @@ class PostRepositoryImpl implements PostsRepository {
   final PostLocaleDataSource localeDataSource;
   final NetworkInfo networkInfo;
   PostRepositoryImpl(
-      this.remoteDataSource, this.localeDataSource, this.networkInfo);
+      {required this.remoteDataSource,required this.localeDataSource,required this.networkInfo});
 
   @override
   Future<Either<Failure, Unit>> addPost(Post newPost) async {

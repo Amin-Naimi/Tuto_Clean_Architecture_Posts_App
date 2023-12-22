@@ -1,49 +1,45 @@
 import 'package:bloc/bloc.dart';
-import 'package:clean_architecture_posts_app/core/error/Failures.dart';
-import 'package:clean_architecture_posts_app/core/strings/Failures.dart';
-import 'package:clean_architecture_posts_app/features/posts/domain/entities/post.dart';
-import 'package:clean_architecture_posts_app/features/posts/domain/usecases/get_all_posts.dart';
+import '../../../../../core/error/failures.dart';
+import '../../../../../core/strings/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+
+import '../../../domain/entities/post.dart';
+import '../../../domain/usecases/get_all_posts.dart';
 
 part 'posts_event.dart';
 part 'posts_state.dart';
 
 class PostsBloc extends Bloc<PostsEvent, PostsState> {
-  final GetAllPostsUseCase getAllPostsUseCase;
-
-  PostsBloc({required this.getAllPostsUseCase}) : super(PostsInitial()) {
+  final GetAllPostsUsecase getAllPosts;
+  PostsBloc({
+    required this.getAllPosts,
+  }) : super(PostsInitial()) {
     on<PostsEvent>((event, emit) async {
-     
       if (event is GetAllPostsEvent) {
-       
-        emit(loadingPostsState());
-        final failuresOrPosts = await getAllPostsUseCase();
-        // tester si on reçoit le right ou le left
-        emit(_mapFailureOrPostsToState(failuresOrPosts));
-     
-      } 
-      else if (event is RefreshPostsEvent) {
-        
-        emit(loadingPostsState());
-        final failuresOrPosts = await getAllPostsUseCase();
-        // tester si on reçoit le right ou le left
-        emit(_mapFailureOrPostsToState(failuresOrPosts));
-      
+        emit(LoadingPostsState());
+
+        final failureOrPosts = await getAllPosts();
+        emit(_mapFailureOrPostsToState(failureOrPosts));
+      } else if (event is RefreshPostsEvent) {
+        emit(LoadingPostsState());
+
+        final failureOrPosts = await getAllPosts();
+        emit(_mapFailureOrPostsToState(failureOrPosts));
       }
     });
   }
 
   PostsState _mapFailureOrPostsToState(Either<Failure, List<Post>> either) {
     return either.fold(
-      (failure) => ErrorPostsState(message: _mapFailureTomessage(failure)),
-      (Posts) => LoadedPostsState(
-        posts: Posts,
+      (failure) => ErrorPostsState(message: _mapFailureToMessage(failure)),
+      (posts) => LoadedPostsState(
+        posts: posts,
       ),
     );
   }
 
-  String _mapFailureTomessage(Failure failure) {
+  String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case ServerFailure:
         return SERVER_FAILURE_MESSAGE;
@@ -52,7 +48,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       case OfflineFailure:
         return OFFLINE_FAILURE_MESSAGE;
       default:
-        return "Unexpected Error try again";
+        return "Unexpected Error , Please try again later .";
     }
   }
 }

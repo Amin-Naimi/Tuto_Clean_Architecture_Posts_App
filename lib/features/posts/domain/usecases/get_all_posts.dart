@@ -1,31 +1,15 @@
-import 'package:clean_architecture_posts_app/core/error/Failures.dart';
-import 'package:clean_architecture_posts_app/core/network/network_info.dart';
-import 'package:clean_architecture_posts_app/features/posts/domain/entities/post.dart';
-import 'package:clean_architecture_posts_app/features/posts/domain/repositories/posts_repository.dart';
+import '../repositories/posts_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class GetAllPostsUseCase{
+import '../../../../core/error/failures.dart';
+import '../entities/post.dart';
+
+class GetAllPostsUsecase {
   final PostsRepository repository;
 
-  GetAllPostsUseCase(this.repository);
- /*Methode_1*/
- Future<Either<Failure,List<Post>>> call()async{
-  return await repository.getAllPosts();
- }
- /*
- to execute the methode 1 : 
- soit : - getAllPostsUseCase.call()
- ou   : - getAllPostsUseCase
+  GetAllPostsUsecase(this.repository);
 
- */
+  Future<Either<Failure, List<Post>>> call() async {
+    return await repository.getAllPosts();
+  }
 }
-
-
-
-
-/*
-
-
-user = > Presentation => Domain => Data
-
-*/
